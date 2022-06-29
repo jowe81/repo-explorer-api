@@ -1,20 +1,19 @@
 import axios from 'axios';
 import { readFile } from 'node:fs/promises';
 
-const getFromURL = (path: string) => {
-  console.log(`Getting from URL ${path}`);
-  return axios.get(path);
-};
+const getFromURL = (path: string) => axios.get(path);
 
-const getFromFile = (path: string) => {
-  console.log(`Getting from File ${path}`);
-  return readFile(path, 'utf8');
-};
+const getFromFile = (path: string) => readFile(path, 'utf8');
 
 const isURL = (path: string) => {
   return ['http://', 'https:/'].includes(path.substring(0, 7));
 };
 
+/**
+ * Read repo data from URL or file
+ * @param path
+ * @returns a promise to the repo data from the path
+ */
 const get = (path: string) => {
   return new Promise((resolve, reject) => {
     if (isURL(path)) {
@@ -29,18 +28,25 @@ const get = (path: string) => {
   });
 };
 
+/**
+ * Read and aggregate repo data from files and/or URLs
+ * @param paths an array with paths to files/URLs
+ * @returns a promise to the repo data from all paths
+ */
 const getAggregate = (paths: string[]) => {
   return new Promise((resolve, reject) => {
     const promises: any = [];
     let results: object[] = [];
     paths.forEach((path) => promises.push(get(path)));
-    Promise.all(promises).then((data) => {
-      data.forEach((records) => {
-        results = [...results, ...records];
-      });
-      resolve(results);
-    });
+    Promise.all(promises)
+      .then((data) => {
+        data.forEach((records) => {
+          results = [...results, ...records];
+        });
+        resolve(results);
+      })
+      .catch(reject);
   });
 };
 
-export { getFromURL, getFromFile, get, getAggregate };
+export { get, getAggregate };
