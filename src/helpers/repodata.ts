@@ -36,14 +36,17 @@ const get = (path: string) => {
 const getAggregate = (paths: string[]) => {
   return new Promise((resolve, reject) => {
     const promises: any = [];
-    let results: object[] = [];
+    let results: any = [];
     paths.forEach((path) => promises.push(get(path)));
     Promise.all(promises)
       .then((data) => {
         data.forEach((records) => {
           results = [...results, ...records];
         });
-        resolve(results);
+        const filteredResults = results.filter(
+          (record: any) => record.fork === false
+        );
+        resolve(filteredResults);
       })
       .catch(reject);
   });
