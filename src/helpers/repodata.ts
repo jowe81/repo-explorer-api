@@ -28,13 +28,20 @@ const get = (path: string) => {
   });
 };
 
-const sort = (repoRecords: any[], property: string) => {
+/**
+ * Sort an array of repo records by a property
+ * @param repoRecords An array with repo records
+ * @param property The property to sort by
+ * @param desc Whether or not to invert the resulting order
+ */
+const sort = (repoRecords: any[], property: string, desc: boolean = false) => {
   repoRecords.sort((a: any, b: any) => {
+    const inversionFactor = desc ? -1 : 1;
     if (a[property] > b[property]) {
-      return -1;
+      return -1 * inversionFactor;
     }
     if (a[property] < b[property]) {
-      return 1;
+      return 1 * inversionFactor;
     }
     return 0;
   });
@@ -45,7 +52,7 @@ const sort = (repoRecords: any[], property: string) => {
  * @param paths an array with paths to files/URLs
  * @returns a promise to the repo data from all paths
  */
-const getAggregate = (paths: string[]) => {
+const getAggregate = (paths: string[], sortBy: string = 'created_at', desc: boolean = false) => {
   return new Promise((resolve, reject) => {
     const promises: any = [];
     let results: any = [];
@@ -58,6 +65,7 @@ const getAggregate = (paths: string[]) => {
         const filteredResults = results.filter(
           (record: any) => record.fork === false
         );
+        sort(filteredResults, sortBy, desc);
         resolve(filteredResults);
       })
       .catch(reject);
