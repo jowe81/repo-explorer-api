@@ -28,6 +28,18 @@ const get = (path: string) => {
   });
 };
 
+const sort = (repoRecords: any[], property: string) => {
+  repoRecords.sort((a: any, b: any) => {
+    if (a[property] > b[property]) {
+      return -1;
+    }
+    if (a[property] < b[property]) {
+      return 1;
+    }
+    return 0;
+  });
+};
+
 /**
  * Read and aggregate repo data from files and/or URLs
  * @param paths an array with paths to files/URLs
@@ -52,4 +64,4 @@ const getAggregate = (paths: string[]) => {
   });
 };
 
-export { get, getAggregate };
+export { get, getAggregate, sort };
