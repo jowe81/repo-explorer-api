@@ -16,7 +16,12 @@ repos.get('/', async (_: Request, res: Response) => {
   ];
 
   //I am aware that the below is not scalable - we're retrieving from Github on every request.
-  getAggregate(sources).then((jsonData) => {
-    res.json(jsonData);
-  });
+  getAggregate(sources)
+    .then((jsonData) => {
+      res.json(jsonData);
+    })
+    .catch((err) => {
+      res.status(500);
+      res.end();
+    });
 });
