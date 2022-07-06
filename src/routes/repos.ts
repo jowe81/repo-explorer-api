@@ -9,10 +9,13 @@ repos.get('/', async (_: Request, res: Response) => {
   res.status(200);
 
   // TODO: See README.md Task (A). Return repo data here. You’ve got this!
+
   const sources = [
     './data/repos.json',
     'https://api.github.com/users/silverorange/repos',
   ];
+
+  //I am aware that the below is not scalable - we're retrieving from Github on every request.
   getAggregate(sources).then((jsonData) => {
     res.json(jsonData);
   });
