@@ -52,7 +52,11 @@ const sort = (repoRecords: any[], property: string, desc: boolean = false) => {
  * @param paths an array with paths to files/URLs
  * @returns a promise to the repo data from all paths
  */
-const getAggregate = (paths: string[], sortBy: string = 'created_at', desc: boolean = false) => {
+const getAggregate = (
+  paths: string[],
+  sortBy: string = 'created_at',
+  desc: boolean = true
+) => {
   return new Promise((resolve, reject) => {
     const promises: any = [];
     let results: any = [];
